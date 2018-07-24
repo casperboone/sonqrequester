@@ -6,7 +6,7 @@ use App\SongRequest;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class RequestSongTest extends TestCase
 {
     use RefreshDatabase;
 
