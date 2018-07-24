@@ -10,6 +10,11 @@ class ExampleTest extends TestCase
 {
     use RefreshDatabase;
 
+    // Requirements
+    // - Optional via external song API
+    // - A user can add 1 request each 5 minutes --> determined via session?
+    // - Add validation
+
     /** @test */
     public function a_user_can_request_a_song()
     {

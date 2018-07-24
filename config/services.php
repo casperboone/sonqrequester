@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'lastfm' => [
+        'key' => env('LASTFM_KEY'),
+    ],
+
 ];
