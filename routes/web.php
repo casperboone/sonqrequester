@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::post('requests', 'SongRequestController@store');
+Route::post('search', 'SongSearchController@search');
