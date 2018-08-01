@@ -16,17 +16,17 @@ class Visitor
 
     public function hasAlreadyVotedFor(SongRequest $songRequest)
     {
-        return in_array($songRequest->id, $this->votes());
+        return $this->votes()->contains($songRequest);
     }
 
     public function registerVote(SongRequest $songRequest)
     {
-        $this->session->put('votes', $this->votes() + [$songRequest->id]);
+        $this->session->put('votes', $this->votes()->push($songRequest));
     }
 
     public function votes()
     {
-        return $this->session->get('votes', []);
+        return $this->session->get('votes', collect());
     }
 
     public function isAllowedToRequest() {
