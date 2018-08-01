@@ -18,6 +18,7 @@ class SearchTest extends TestCase
             'name' => 'Casper',
             'artist' => 'Paolo Nutini',
             'track' => 'New Shoes',
+            'image' => 'http://host.com/image.jpg',
             'votes' => 19,
         ]);
         session()->put('requests', collect([$requestWithOwnership]));
@@ -44,6 +45,7 @@ class SearchTest extends TestCase
                     'name' => 'Casper',
                     'artist' => 'Paolo Nutini',
                     'track' => 'New Shoes',
+                    'image' => 'http://host.com/image.jpg',
                     'votes' => 19,
                     'allowed_to_vote' => true,
                     'owner' => true,

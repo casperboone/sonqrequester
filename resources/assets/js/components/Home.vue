@@ -5,19 +5,21 @@
             <button :class="['p-2', 'text-pink', 'text-sm'].concat(formActive ? ['bg-pink-lighter'] : ['bg-white'])" @click="formActive = !formActive">Request a Song</button>
         </div>
 
-        <request-form v-if="formActive" class="bg-white" @requestSubmitted="formActive = false"></request-form>
-        <requests-list></requests-list>
+        <request-form v-if="formActive" class="bg-white" @requestSubmitted="addRequest"></request-form>
+        <requests-list :requests="requests"></requests-list>
     </div>
 </template>
 
 <script>
     import RequestForm from './RequestForm'
     import RequestsList from './RequestsList'
+    import Request from '../Request'
 
     export default {
         data() {
             return {
                 formActive: false,
+                requests: [],
             }
         },
         components: {
@@ -25,7 +27,27 @@
             'requests-list': RequestsList
         },
         mounted() {
-            console.log('Component mounted.')
+            this.updateRequests()
+            window.setInterval(this.updateRequests, 10000)
+
+            window.Echo.channel('song-requests')
+                .listen("SongWasRequested", event => this.requests.push(new Request(event.request)))
+                .listen("RequestGotVote", event =>
+                    this.requests.find(request => request.id == event.request.id).votes = event.request.votes
+                );
+        },
+        methods: {
+            updateRequests() {
+                axios.get('/requests')
+                    .then(response => this.requests = response.data.data.map(data => new Request(data)))
+            },
+            addRequest(request) {
+                this.formActive = false
+
+                this.requests.push(request)
+
+                window.scrollTo(0, document.body.scrollHeight)
+            }
         }
     }
 </script>

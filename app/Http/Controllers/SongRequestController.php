@@ -26,9 +26,10 @@ class SongRequestController extends Controller
             'name' => 'required',
             'artist' => 'required',
             'track' => 'required',
+            'image' => 'url'
         ]);
 
-        $songRequest = SongRequest::create($request->only('name', 'artist', 'track'));
+        $songRequest = SongRequest::create($request->only('name', 'artist', 'track', 'image'));
         $visitor->registerRequest($songRequest);
 
         broadcast(new SongWasRequested($songRequest))->toOthers();

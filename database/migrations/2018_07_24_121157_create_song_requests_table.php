@@ -18,6 +18,7 @@ class CreateSongRequestsTable extends Migration
             $table->string('name');
             $table->string('artist');
             $table->string('track');
+            $table->string('image')->nullable();
             $table->integer('votes')->default(0);
             $table->timestamps();
         });

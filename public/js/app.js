@@ -39890,6 +39890,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RequestForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RequestForm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__RequestsList__ = __webpack_require__(88);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__RequestsList___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__RequestsList__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Request__ = __webpack_require__(97);
 //
 //
 //
@@ -39902,6 +39903,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -39909,7 +39911,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            formActive: false
+            formActive: false,
+            requests: []
         };
     },
 
@@ -39918,7 +39921,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'requests-list': __WEBPACK_IMPORTED_MODULE_1__RequestsList___default.a
     },
     mounted: function mounted() {
-        console.log('Component mounted.');
+        var _this = this;
+
+        this.updateRequests();
+        window.setInterval(this.updateRequests, 10000);
+
+        window.Echo.channel('song-requests').listen("SongWasRequested", function (event) {
+            return _this.requests.push(new __WEBPACK_IMPORTED_MODULE_2__Request__["a" /* default */](event.request));
+        }).listen("RequestGotVote", function (event) {
+            return _this.requests.find(function (request) {
+                return request.id == event.request.id;
+            }).votes = event.request.votes;
+        });
+    },
+
+    methods: {
+        updateRequests: function updateRequests() {
+            var _this2 = this;
+
+            axios.get('/requests').then(function (response) {
+                return _this2.requests = response.data.data.map(function (data) {
+                    return new __WEBPACK_IMPORTED_MODULE_2__Request__["a" /* default */](data);
+                });
+            });
+        },
+        addRequest: function addRequest(request) {
+            this.formActive = false;
+
+            this.requests.push(request);
+
+            window.scrollTo(0, document.body.scrollHeight);
+        }
     }
 });
 
@@ -39975,6 +40008,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Request__ = __webpack_require__(97);
 //
 //
 //
@@ -40006,6 +40040,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -40029,7 +40065,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.artist = '';
                 _this.image = '';
 
-                _this.$emit("requestSubmitted");
+                _this.$emit("requestSubmitted", new __WEBPACK_IMPORTED_MODULE_0__Request__["a" /* default */](response.data.data));
             });
         },
         searchTracks: function searchTracks() {
@@ -40262,99 +40298,40 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            'requests': []
-        };
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        this.updateRequests();
-        window.setInterval(this.updateRequests, 10000);
-
-        window.Echo.channel('song-requests').listen("SongWasRequested", function (event) {
-            return _this.requests.push(new Request(event.request));
-        }).listen("RequestGotVote", function (event) {
-            return _this.requests.find(function (request) {
-                return request.id == event.request.id;
-            }).votes = event.request.votes;
-        });
-    },
-
+    props: ['requests'],
     computed: {
         sortedRequests: function sortedRequests() {
             return this.requests.sort(function (a, b) {
                 return b.votes - a.votes;
             });
         }
-    },
-    methods: {
-        updateRequests: function updateRequests() {
-            var _this2 = this;
-
-            axios.get('/requests').then(function (response) {
-                return _this2.requests = response.data.data.map(function (data) {
-                    return new Request(data);
-                });
-            });
-        }
     }
 });
-
-var Request = function () {
-    function Request(data) {
-        _classCallCheck(this, Request);
-
-        this.id = data.id;
-        this.name = data.name;
-        this.track = data.track;
-        this.artist = data.artist;
-        this.votes = data.votes;
-        this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote;
-        this.owner = data.owner == undefined ? false : data.owner;
-    }
-
-    _createClass(Request, [{
-        key: 'upvote',
-        value: function upvote() {
-            var _this3 = this;
-
-            this.votes++;
-            this.allowedToVote = false;
-
-            axios.post('/requests/' + this.id + '/upvote').catch(function () {
-                _this3.votes--;
-                _this3.allowedToVote = true;
-            });
-        }
-    }]);
-
-    return Request;
-}();
 
 /***/ }),
 /* 90 */
@@ -40376,10 +40353,25 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "flex-1" }, [
-            _c("span", { staticClass: "block font-bold" }, [
-              _vm._v(_vm._s(request.track))
-            ]),
-            _vm._v("\n            " + _vm._s(request.artist) + "\n        ")
+            _c("div", { staticClass: "flex" }, [
+              request.image
+                ? _c("img", {
+                    staticClass: "mr-2",
+                    attrs: { src: request.image }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex-1" }, [
+                _c("span", { staticClass: "block font-bold" }, [
+                  _vm._v(_vm._s(request.track))
+                ]),
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(request.artist) +
+                    "\n                "
+                )
+              ])
+            ])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "text-lg font-bold flex items-center" }, [
@@ -40458,15 +40450,11 @@ var render = function() {
       _vm.formActive
         ? _c("request-form", {
             staticClass: "bg-white",
-            on: {
-              requestSubmitted: function($event) {
-                _vm.formActive = false
-              }
-            }
+            on: { requestSubmitted: _vm.addRequest }
           })
         : _vm._e(),
       _vm._v(" "),
-      _c("requests-list")
+      _c("requests-list", { attrs: { requests: _vm.requests } })
     ],
     1
   )
@@ -40486,6 +40474,53 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Request = function () {
+    function Request(data) {
+        _classCallCheck(this, Request);
+
+        this.id = data.id;
+        this.name = data.name;
+        this.track = data.track;
+        this.artist = data.artist;
+        this.image = data.image;
+        this.votes = data.votes;
+        this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote;
+        this.owner = data.owner == undefined ? false : data.owner;
+    }
+
+    _createClass(Request, [{
+        key: 'upvote',
+        value: function upvote() {
+            var _this = this;
+
+            this.votes++;
+            this.allowedToVote = false;
+
+            axios.post('/requests/' + this.id + '/upvote').catch(function () {
+                _this.votes--;
+                _this.allowedToVote = true;
+            });
+        }
+    }]);
+
+    return Request;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Request);
 
 /***/ })
 /******/ ]);

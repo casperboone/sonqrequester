@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import Request from '../Request'
+
     export default {
         data() {
             return {
@@ -50,7 +52,7 @@
                         this.artist = ''
                         this.image = ''
 
-                        this.$emit("requestSubmitted")
+                        this.$emit("requestSubmitted", new Request(response.data.data))
                     })
             },
             searchTracks() {

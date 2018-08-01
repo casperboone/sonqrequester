@@ -17,7 +17,8 @@ class RequestSongTest extends TestCase
         $response = $this->withoutExceptionHandling()->post('/requests', [
             'name' => 'Casper',
             'track' => 'New Shoes',
-            'artist' => 'Paolo Nutini'
+            'artist' => 'Paolo Nutini',
+            'image' => 'http://host.com/image.jpg'
         ]);
 
         $response->assertStatus(201);
@@ -26,6 +27,7 @@ class RequestSongTest extends TestCase
         $this->assertEquals('Casper', $latestRequest->name);
         $this->assertEquals('New Shoes', $latestRequest->track);
         $this->assertEquals('Paolo Nutini', $latestRequest->artist);
+        $this->assertEquals('http://host.com/image.jpg', $latestRequest->image);
         $this->assertEquals(true, $response->json('data.owner'));
     }
 
@@ -63,6 +65,20 @@ class RequestSongTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('artist');
+    }
+
+    /** @test */
+    public function a_user_should_give_a_valid_image_url()
+    {
+        $response = $this->postJson('/requests', [
+            'name' => 'Casper',
+            'artist' => 'Paolo Nutini',
+            'track' => 'New Shoes',
+            'image' => 'invalid-url'
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('image');
     }
 
     /** @test */
