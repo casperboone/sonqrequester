@@ -14,11 +14,13 @@ class RequestSongTest extends TestCase
     /** @test */
     public function a_user_can_request_a_song()
     {
-        $response = $this->post('/requests', [
+        $response = $this->withoutExceptionHandling()->post('/requests', [
             'name' => 'Casper',
             'track' => 'New Shoes',
             'artist' => 'Paolo Nutini'
         ]);
+
+        $response->dump();
 
         $response->assertStatus(200);
 

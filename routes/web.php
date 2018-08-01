@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('requests', 'SongRequestController@index');
 Route::post('requests', 'SongRequestController@store');
-Route::post('requests/{request}/upvote', 'SongRequestController@upvote');
+Route::post('requests/{songRequest}/upvote', 'SongRequestController@upvote');
 Route::post('search', 'SongSearchController@search');

@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\SongRequest;
 use App\Visitor;
+use App\Http\Resources\SongRequest as SongRequestResource;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class SongRequestController extends Controller
 {
+    public function index()
+    {
+        return SongRequestResource::collection(SongRequest::all());
+    }
+    
     public function store(Visitor $visitor, Request $request)
     {
-        if( !$visitor->isAllowedToRequest()) {
+        if (!$visitor->isAllowedToRequest()) {
             return response("You can request a song again in a few minutes.", 403);
         }
 
@@ -21,10 +26,10 @@ class SongRequestController extends Controller
             'track' => 'required',
         ]);
 
-        SongRequest::create($request->only('name', 'artist', 'track'));
+        $songRequest = SongRequest::create($request->only('name', 'artist', 'track'));
         $visitor->registerRequest();
 
-        return response('OK', 200);
+        return new SongRequestResource($songRequest);
     }
 
     public function upvote(Visitor $visitor, SongRequest $songRequest)
@@ -36,6 +41,6 @@ class SongRequestController extends Controller
         $songRequest->upvote();
         $visitor->registerVote($songRequest);
 
-        return response('OK', 200);
+        return new SongRequestResource($songRequest);
     }
 }

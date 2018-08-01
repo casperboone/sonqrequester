@@ -16,7 +16,9 @@ class Visitor
 
     public function hasAlreadyVotedFor(SongRequest $songRequest)
     {
-        return $this->votes()->contains($songRequest);
+        return $this->votes()->contains(function ($votedRequest) use ($songRequest) {
+            return $songRequest->is($votedRequest);
+        });
     }
 
     public function registerVote(SongRequest $songRequest)
