@@ -20,9 +20,7 @@ class RequestSongTest extends TestCase
             'artist' => 'Paolo Nutini'
         ]);
 
-        $response->dump();
-
-        $response->assertStatus(200);
+        $response->assertStatus(201);
 
         $latestRequest = SongRequest::firstOrFail();
         $this->assertEquals('Casper', $latestRequest->name);
@@ -75,7 +73,7 @@ class RequestSongTest extends TestCase
             'artist' => 'Paolo Nutini'
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
 
         $response = $this->post('/requests', [
             'name' => 'Joel',
@@ -95,7 +93,7 @@ class RequestSongTest extends TestCase
             'artist' => 'Paolo Nutini'
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
 
         Carbon::setTestNow(Carbon::now()->addMinutes(10));
 
@@ -105,7 +103,7 @@ class RequestSongTest extends TestCase
             'artist' => 'Billy Joel'
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
 
         $this->assertEquals(2, SongRequest::count());
     }
