@@ -39984,13 +39984,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             name: '',
             track: '',
-            artist: ''
+            artist: '',
+            image: '',
+            showSuggestions: false,
+            suggestions: []
         };
     },
 
@@ -39998,14 +40023,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submit: function submit() {
             var _this = this;
 
-            axios.post("/requests", { name: this.name, track: this.track, artist: this.artist }).then(function (response) {
+            axios.post("/requests", { name: this.name, track: this.track, artist: this.artist, image: this.image }).then(function (response) {
                 _this.name = '';
                 _this.track = '';
                 _this.artist = '';
+                _this.image = '';
 
                 _this.$emit("requestSubmitted");
             });
+        },
+        searchTracks: function searchTracks() {
+            var _this2 = this;
+
+            axios.post("/search", { query: this.track }).then(function (response) {
+                return _this2.suggestions = response.data;
+            });
+        },
+        selectSuggestion: function selectSuggestion(suggestion) {
+            this.track = suggestion.track;
+            this.artist = suggestion.artist;
+            this.image = suggestion.image;
+
+            this.clearSuggestions();
+        },
+        clearSuggestions: function clearSuggestions() {
+            this.showSuggestions = false;
+            this.suggestions = [];
         }
+    },
+    watch: {
+        track: _.debounce(function () {
+            this.searchTracks();
+        }, 400)
     }
 });
 
@@ -40027,7 +40076,7 @@ var render = function() {
           expression: "name"
         }
       ],
-      staticClass: "block w-full p-3 bg-grey-lighter",
+      staticClass: "block w-full p-3 h-10 bg-grey-lighter",
       attrs: { type: "text", placeholder: "Your name" },
       domProps: { value: _vm.name },
       on: {
@@ -40040,49 +40089,105 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.track,
-          expression: "track"
-        }
-      ],
-      staticClass: "block w-full mt-2 p-3 bg-grey-lighter",
-      attrs: { type: "text", placeholder: "Track title" },
-      domProps: { value: _vm.track },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
+    _c("div", { staticClass: "flex mt-2" }, [
+      _c("div", { staticClass: "flex-1" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.track,
+              expression: "track"
+            }
+          ],
+          staticClass: "block w-full h-10 p-3 bg-grey-lighter",
+          attrs: { type: "text", placeholder: "Track title" },
+          domProps: { value: _vm.track },
+          on: {
+            focus: function($event) {
+              _vm.showSuggestions = true
+            },
+            blur: function($event) {
+              _vm.showSuggestions = false
+            },
+            click: function($event) {
+              _vm.searchTracks()
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.track = $event.target.value
+            }
           }
-          _vm.track = $event.target.value
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.artist,
-          expression: "artist"
-        }
-      ],
-      staticClass: "block w-full mt-2 p-3 bg-grey-lighter",
-      attrs: { type: "text", placeholder: "Artist" },
-      domProps: { value: _vm.artist },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
+        }),
+        _vm._v(" "),
+        _vm.showSuggestions
+          ? _c(
+              "div",
+              { staticClass: "text-black" },
+              _vm._l(_vm.suggestions, function(suggestion) {
+                return _c(
+                  "div",
+                  {
+                    staticClass: "h-12 my-2 flex",
+                    on: {
+                      click: function($event) {
+                        _vm.selectSuggestion(suggestion)
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "h-12",
+                      attrs: { src: suggestion.image }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex-1 pl-2" }, [
+                      _c("span", { staticClass: "block font-bold" }, [
+                        _vm._v(_vm._s(suggestion.track))
+                      ]),
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(suggestion.artist) +
+                          "\n                    "
+                      )
+                    ])
+                  ]
+                )
+              })
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.artist,
+              expression: "artist"
+            }
+          ],
+          staticClass: "block w-full mt-2 p-3 bg-grey-lighter",
+          attrs: { type: "text", placeholder: "Artist" },
+          domProps: { value: _vm.artist },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.artist = $event.target.value
+            }
           }
-          _vm.artist = $event.target.value
-        }
-      }
-    }),
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _vm.image
+          ? _c("img", { staticClass: "h-20 ml-2", attrs: { src: _vm.image } })
+          : _vm._e()
+      ])
+    ]),
     _vm._v(" "),
     _c(
       "button",
@@ -40230,6 +40335,7 @@ var Request = function () {
         this.artist = data.artist;
         this.votes = data.votes;
         this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote;
+        this.owner = data.owner == undefined ? false : data.owner;
     }
 
     _createClass(Request, [{
@@ -40264,7 +40370,9 @@ var render = function() {
       return _c(
         "div",
         {
-          class: ["p-2", "flex"].concat(index % 2 == 0 ? [] : ["bg-grey-dark"])
+          class: ["p-2", "flex"]
+            .concat(request.owner ? ["bg-yellow-dark"] : [""])
+            .concat(index % 2 == 0 ? [] : ["bg-grey-dark"])
         },
         [
           _c("div", { staticClass: "flex-1" }, [
@@ -40334,7 +40442,9 @@ var render = function() {
         _c(
           "button",
           {
-            staticClass: "bg-white p-2 text-pink text-sm",
+            class: ["p-2", "text-pink", "text-sm"].concat(
+              _vm.formActive ? ["bg-pink-lighter"] : ["bg-white"]
+            ),
             on: {
               click: function($event) {
                 _vm.formActive = !_vm.formActive

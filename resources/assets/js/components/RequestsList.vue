@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="(request, index) in sortedRequests" :class="['p-2', 'flex'].concat(index % 2 == 0 ? [] : ['bg-grey-dark'])">
+        <div v-for="(request, index) in sortedRequests" :class="['p-2', 'flex'].concat(request.owner ? ['bg-yellow-dark'] : ['']).concat(index % 2 == 0 ? [] : ['bg-grey-dark'])">
             <div class="flex-1">
                 <span class="block font-bold">{{ request.track }}</span>
                 {{ request.artist }}
@@ -53,6 +53,7 @@
             this.artist = data.artist
             this.votes = data.votes
             this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote
+            this.owner = data.owner == undefined ? false : data.owner
         }
 
         upvote() {

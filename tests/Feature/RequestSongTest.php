@@ -26,6 +26,7 @@ class RequestSongTest extends TestCase
         $this->assertEquals('Casper', $latestRequest->name);
         $this->assertEquals('New Shoes', $latestRequest->track);
         $this->assertEquals('Paolo Nutini', $latestRequest->artist);
+        $this->assertEquals(true, $response->json('data.owner'));
     }
 
     /** @test */

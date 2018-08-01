@@ -2,7 +2,7 @@
     <div>
         <div class="w-full bg-pink p-2 flex">
             <div class="flex-1">Outsite</div>
-            <button class="bg-white p-2 text-pink text-sm" @click="formActive = !formActive">Request a Song</button>
+            <button :class="['p-2', 'text-pink', 'text-sm'].concat(formActive ? ['bg-pink-lighter'] : ['bg-white'])" @click="formActive = !formActive">Request a Song</button>
         </div>
 
         <request-form v-if="formActive" class="bg-white" @requestSubmitted="formActive = false"></request-form>

@@ -14,19 +14,20 @@ class SearchTest extends TestCase
     /** @test */
     public function a_user_can_search_a_song()
     {
-        factory(SongRequest::class)->create([
+        $requestWithOwnership = factory(SongRequest::class)->create([
             'name' => 'Casper',
             'artist' => 'Paolo Nutini',
             'track' => 'New Shoes',
             'votes' => 19,
         ]);
+        session()->put('requests', collect([$requestWithOwnership]));
         $requestWithVote = factory(SongRequest::class)->create([
             'name' => 'Joel',
             'artist' => 'Billy Joel',
             'track' => 'Piano Man',
             'votes' => 5,
         ]);
-        $this->app['session']->put('votes', collect([$requestWithVote]));
+       session()->put('votes', collect([$requestWithVote]));
         factory(SongRequest::class)->create([
             'name' => 'Daan',
             'artist' => 'Troye Sivan',
@@ -44,21 +45,24 @@ class SearchTest extends TestCase
                     'artist' => 'Paolo Nutini',
                     'track' => 'New Shoes',
                     'votes' => 19,
-                    'allowed_to_vote' => true
+                    'allowed_to_vote' => true,
+                    'owner' => true,
                 ],
                 [
                     'name' => 'Joel',
                     'artist' => 'Billy Joel',
                     'track' => 'Piano Man',
                     'votes' => 5,
-                    'allowed_to_vote' => false
+                    'allowed_to_vote' => false,
+                    'owner' => false
                 ],
                 [
                     'name' => 'Daan',
                     'artist' => 'Troye Sivan',
                     'track' => 'There For You',
                     'votes' => 11,
-                    'allowed_to_vote' => true
+                    'allowed_to_vote' => true,
+                    'owner' => false,
                 ],
             ]
         ]);

@@ -39,7 +39,20 @@ class Visitor
         return $this->session->get('last_request', Carbon::minValue());
     }
 
-    public function registerRequest() {
+    public function registerRequest(SongRequest $songRequest) {
+        $this->session->put('requests', $this->requests()->push($songRequest));
+
         return $this->session->put('last_request', Carbon::now());
+    }
+
+    public function isOwnerOf(SongRequest $songRequest) {
+        return $this->requests()->contains(function ($owningRequest) use ($songRequest) {
+            return $songRequest->is($owningRequest);
+        });
+    }
+
+    public function requests()
+    {
+        return $this->session->get('requests', collect());
     }
 }

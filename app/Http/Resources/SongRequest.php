@@ -21,6 +21,7 @@ class SongRequest extends JsonResource
             'track' => $this->track,
             'votes' => (int)$this->votes,
             'allowed_to_vote' => !$request->visitor()->hasAlreadyVotedFor($this->resource),
+            'owner' => $request->visitor()->isOwnerOf($this->resource),
         ];
     }
 }

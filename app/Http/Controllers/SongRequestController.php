@@ -13,9 +13,6 @@ class SongRequestController extends Controller
 {
     public function index()
     {
-        session()->forget('last_request');
-        session()->forget('votes');
-
         return SongRequestResource::collection(SongRequest::all());
     }
     
@@ -32,9 +29,9 @@ class SongRequestController extends Controller
         ]);
 
         $songRequest = SongRequest::create($request->only('name', 'artist', 'track'));
-        $visitor->registerRequest();
+        $visitor->registerRequest($songRequest);
 
-        event(new SongWasRequested($songRequest));
+        broadcast(new SongWasRequested($songRequest))->toOthers();
 
         return new SongRequestResource($songRequest);
     }
@@ -48,7 +45,7 @@ class SongRequestController extends Controller
         $songRequest->upvote();
         $visitor->registerVote($songRequest);
 
-        event(new RequestGotVote($songRequest));
+        broadcast(new RequestGotVote($songRequest));
 
         return new SongRequestResource($songRequest);
     }
