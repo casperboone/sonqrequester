@@ -36,6 +36,6 @@ class SearchTest extends TestCase
         $response = $this->postJson('/requests/1/upvote');
 
         $this->assertEquals(1, SongRequest::first()->votes);
-        $response->assertStatus(422);
+        $response->assertStatus(403);
     }
 }

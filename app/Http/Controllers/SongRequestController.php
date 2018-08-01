@@ -30,7 +30,7 @@ class SongRequestController extends Controller
     public function upvote(Visitor $visitor, SongRequest $songRequest)
     {
         if ($visitor->hasAlreadyVotedFor($songRequest)) {
-            throw ValidationException::withMessages(['visitor' => 'You already voted for this track.']);
+            return response('You already voted for this track.', 403);
         }
 
         $songRequest->upvote();
