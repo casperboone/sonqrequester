@@ -6343,6 +6343,19 @@ table {
 
 /* Add custom utilities here... */
 
+.triangle {
+  width: 0;
+  height: 0;
+  margin: auto;
+  border-top: 20px solid;
+  border-color: #e31c79;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  top: 3rem;
+  left: 0;
+  right: 0;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;

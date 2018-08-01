@@ -39903,6 +39903,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -40456,8 +40461,8 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "w-full bg-pink p-2 flex" }, [
-        _c("div", { staticClass: "flex-1" }, [_vm._v("Outsite")]),
+      _c("div", { staticClass: "w-full bg-pink p-2 flex fixed h-12" }, [
+        _vm._m(0),
         _vm._v(" "),
         _c(
           "button",
@@ -40475,6 +40480,10 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "triangle fixed" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "pt-12" }),
+      _vm._v(" "),
       _vm.formActive
         ? _c("request-form", {
             staticClass: "bg-white",
@@ -40487,7 +40496,19 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "flex-1" }, [
+      _c("object", {
+        staticClass: "h-full",
+        attrs: { data: "/images/outsite_logo.svg", type: "image/svg+xml" }
+      })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

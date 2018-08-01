@@ -1,9 +1,14 @@
 <template>
     <div>
-        <div class="w-full bg-pink p-2 flex">
-            <div class="flex-1">Outsite</div>
+        <div class="w-full bg-pink p-2 flex fixed h-12">
+            <div class="flex-1">
+                <object class="h-full" data="/images/outsite_logo.svg" type="image/svg+xml"></object>
+            </div>
             <button :class="['p-2', 'text-pink', 'text-sm'].concat(formActive ? ['bg-pink-lighter'] : ['bg-white'])" @click="formActive = !formActive">Request a Song</button>
         </div>
+        <div class="triangle fixed"></div>
+
+        <div class="pt-12"></div>
 
         <request-form v-if="formActive" class="bg-white" @requestSubmitted="addRequest"></request-form>
         <requests-list :requests="requests"></requests-list>
