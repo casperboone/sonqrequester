@@ -17,6 +17,7 @@ class CreateSongRequestsTable extends Migration
             $table->increments('id');
             $table->string('artist');
             $table->string('track');
+            $table->integer('votes');
             $table->timestamps();
         });
     }

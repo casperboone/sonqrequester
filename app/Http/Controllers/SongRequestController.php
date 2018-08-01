@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\SongRequest;
+use App\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class SongRequestController extends Controller
 {
@@ -15,6 +17,18 @@ class SongRequestController extends Controller
         ]);
 
         SongRequest::create($request->only('artist', 'track'));
+
+        return response('OK', 200);
+    }
+
+    public function upvote(Visitor $visitor, SongRequest $songRequest)
+    {
+        if ($visitor->hasAlreadyVotedFor($songRequest)) {
+            throw ValidationException::withMessages(['visitor' => 'You already voted for this track.']);
+        }
+
+        $visitor->registerVote($songRequest);
+        $songRequest->upvote();
 
         return response('OK', 200);
     }
