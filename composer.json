@@ -12,6 +12,7 @@
         "matto1990/lastfm-api": "^1.5"
     },
     "require-dev": {
+        "adamwathan/laravel-preset": "dev-master",
         "beyondcode/laravel-dump-server": "^1.1",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
@@ -57,5 +58,11 @@
         "optimize-autoloader": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/adamwathan/laravel-preset"
+        }
+    ]
 }
