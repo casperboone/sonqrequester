@@ -15,3 +15,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
 if (mix.inProduction()) {
   mix.version()
 }
+
+if (!mix.inProduction()) {
+    mix.browserSync('sonqrequester.test');
+}

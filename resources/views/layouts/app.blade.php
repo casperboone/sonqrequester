@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <title>{{ config('app.name', 'Sonq Requester') }}</title>
   </head>
-  <body class="font-sans antialiased text-black leading-tight">
+  <body class="font-sans antialiased text-white leading-tight bg-grey-darkest">
     <div id="app">
       <home></home>
     </div>
