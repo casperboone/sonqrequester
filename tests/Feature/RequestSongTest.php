@@ -3,15 +3,13 @@
 namespace Tests\Feature;
 
 use App\SongRequest;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RequestSongTest extends TestCase
 {
     use RefreshDatabase;
-
-    // Requirements
-    // - A user can add 1 request each 5 minutes --> determined via session?
 
     /** @test */
     public function a_user_can_request_a_song()
@@ -64,5 +62,49 @@ class RequestSongTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('artist');
+    }
+
+    /** @test */
+    public function a_user_cannot_request_twice_within_5_minutes()
+    {
+        $response = $this->withoutExceptionHandling()->post('/requests', [
+            'name' => 'Casper',
+            'track' => 'New Shoes',
+            'artist' => 'Paolo Nutini'
+        ]);
+
+        $response->assertStatus(200);
+
+        $response = $this->post('/requests', [
+            'name' => 'Joel',
+            'track' => 'Piano Man',
+            'artist' => 'Billy Joel'
+        ]);
+
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function a_user_can_request_again_after_5_minutes()
+    {
+        $response = $this->post('/requests', [
+            'name' => 'Casper',
+            'track' => 'New Shoes',
+            'artist' => 'Paolo Nutini'
+        ]);
+
+        $response->assertStatus(200);
+
+        Carbon::setTestNow(Carbon::now()->addMinutes(10));
+
+        $response = $this->post('/requests', [
+            'name' => 'Joel',
+            'track' => 'Piano Man',
+            'artist' => 'Billy Joel'
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertEquals(2, SongRequest::count());
     }
 }

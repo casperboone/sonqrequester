@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Session\Store as SessionStore;
 
 class Visitor
@@ -26,5 +27,17 @@ class Visitor
     public function votes()
     {
         return $this->session->get('votes', []);
+    }
+
+    public function isAllowedToRequest() {
+        return Carbon::now()->subMinutes(5)->greaterThanOrEqualTo($this->lastRequest());
+    }
+
+    public function lastRequest() {
+        return $this->session->get('last_request', Carbon::minValue());
+    }
+
+    public function registerRequest() {
+        return $this->session->put('last_request', Carbon::now());
     }
 }

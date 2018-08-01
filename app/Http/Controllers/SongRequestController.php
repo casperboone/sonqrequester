@@ -9,8 +9,12 @@ use Illuminate\Validation\ValidationException;
 
 class SongRequestController extends Controller
 {
-    public function store(Request $request)
+    public function store(Visitor $visitor, Request $request)
     {
+        if( !$visitor->isAllowedToRequest()) {
+            return response("You can request a song again in a few minutes.", 403);
+        }
+
         $request->validate([
             'name' => 'required',
             'artist' => 'required',
@@ -18,6 +22,7 @@ class SongRequestController extends Controller
         ]);
 
         SongRequest::create($request->only('name', 'artist', 'track'));
+        $visitor->registerRequest();
 
         return response('OK', 200);
     }
@@ -28,8 +33,8 @@ class SongRequestController extends Controller
             throw ValidationException::withMessages(['visitor' => 'You already voted for this track.']);
         }
 
-        $visitor->registerVote($songRequest);
         $songRequest->upvote();
+        $visitor->registerVote($songRequest);
 
         return response('OK', 200);
     }
