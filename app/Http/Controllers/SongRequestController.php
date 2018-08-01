@@ -12,11 +12,12 @@ class SongRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required',
             'artist' => 'required',
             'track' => 'required',
         ]);
 
-        SongRequest::create($request->only('artist', 'track'));
+        SongRequest::create($request->only('name', 'artist', 'track'));
 
         return response('OK', 200);
     }

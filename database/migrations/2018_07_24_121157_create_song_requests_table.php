@@ -15,9 +15,10 @@ class CreateSongRequestsTable extends Migration
     {
         Schema::create('song_requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->string('artist');
             $table->string('track');
-            $table->integer('votes');
+            $table->integer('votes')->default(0);
             $table->timestamps();
         });
     }
