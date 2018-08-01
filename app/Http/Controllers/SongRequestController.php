@@ -19,7 +19,7 @@ class SongRequestController extends Controller
     public function store(Visitor $visitor, Request $request)
     {
         if (!$visitor->isAllowedToRequest()) {
-            return response("You can request a song again in a few minutes.", 403);
+            return response(['message' => 'You already made a request just now, please wait a few minutes before your next request.'], 403);
         }
 
         $request->validate([
@@ -40,7 +40,7 @@ class SongRequestController extends Controller
     public function upvote(Visitor $visitor, SongRequest $songRequest)
     {
         if ($visitor->hasAlreadyVotedFor($songRequest)) {
-            return response('You already voted for this track.', 403);
+            return response(['message' => 'You already voted for this track.'], 403);
         }
 
         $songRequest->upvote();

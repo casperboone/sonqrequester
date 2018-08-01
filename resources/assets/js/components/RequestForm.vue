@@ -1,5 +1,9 @@
 <template>
     <div class="p-2">
+        <div v-if="errorMessage" class="bg-red p-2 mb-3" v-html="'<strong>Oops.</strong> ' + errorMessage">
+
+        </div>
+
         <input type="text" v-model="name" placeholder="Your name" class="block w-full p-3 h-10 bg-grey-lighter">
         <div class="flex mt-2">
             <div class="flex-1">
@@ -40,11 +44,14 @@
                 artist: '',
                 image: '',
                 showSuggestions: false,
-                suggestions: []
+                suggestions: [],
+                errorMessage: ''
             }
         },
         methods: {
             submit() {
+                this.errorMessage = ""
+
                 axios.post("/requests", {name: this.name, track: this.track, artist: this.artist, image: this.image})
                     .then(response => {
                         this.name = ''
@@ -53,6 +60,18 @@
                         this.image = ''
 
                         this.$emit("requestSubmitted", new Request(response.data.data))
+                    })
+                    .catch(error => {
+                        if (error.response.data.message !== undefined) {
+                            this.errorMessage = error.response.data.message
+
+                            if (error.response.data.errors !== undefined) {
+                                this.errorMessage +=
+                                    [].concat.apply([], Object.values(error.response.data.errors)).map(msg => "<li>" + msg + "</li>").join('')
+                            }
+                        } else {
+                            this.errorMessage = error.message
+                        }
                     })
             },
             searchTracks() {

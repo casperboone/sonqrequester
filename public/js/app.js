@@ -40040,6 +40040,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -40051,13 +40055,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             artist: '',
             image: '',
             showSuggestions: false,
-            suggestions: []
+            suggestions: [],
+            errorMessage: ''
         };
     },
 
     methods: {
         submit: function submit() {
             var _this = this;
+
+            this.errorMessage = "";
 
             axios.post("/requests", { name: this.name, track: this.track, artist: this.artist, image: this.image }).then(function (response) {
                 _this.name = '';
@@ -40066,6 +40073,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.image = '';
 
                 _this.$emit("requestSubmitted", new __WEBPACK_IMPORTED_MODULE_0__Request__["a" /* default */](response.data.data));
+            }).catch(function (error) {
+                if (error.response.data.message !== undefined) {
+                    _this.errorMessage = error.response.data.message;
+
+                    if (error.response.data.errors !== undefined) {
+                        _this.errorMessage += [].concat.apply([], Object.values(error.response.data.errors)).map(function (msg) {
+                            return "<li>" + msg + "</li>";
+                        }).join('');
+                    }
+                } else {
+                    _this.errorMessage = error.message;
+                }
             });
         },
         searchTracks: function searchTracks() {
@@ -40103,6 +40122,15 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "p-2" }, [
+    _vm.errorMessage
+      ? _c("div", {
+          staticClass: "bg-red p-2 mb-3",
+          domProps: {
+            innerHTML: _vm._s("<strong>Oops.</strong> " + _vm.errorMessage)
+          }
+        })
+      : _vm._e(),
+    _vm._v(" "),
     _c("input", {
       directives: [
         {
