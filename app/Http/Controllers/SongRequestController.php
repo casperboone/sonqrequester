@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RequestGotUpdated;
 use App\Events\RequestGotVote;
+use App\Events\RequestWasDeleted;
 use App\Events\SongWasRequested;
 use App\SongRequest;
 use App\Visitor;
@@ -15,7 +17,7 @@ class SongRequestController extends Controller
     {
         return SongRequestResource::collection(SongRequest::all());
     }
-    
+
     public function store(Visitor $visitor, Request $request)
     {
         if (!$visitor->isAllowedToRequest()) {
@@ -47,6 +49,42 @@ class SongRequestController extends Controller
         $visitor->registerVote($songRequest);
 
         broadcast(new RequestGotVote($songRequest));
+
+        return new SongRequestResource($songRequest);
+    }
+
+    public function removeName(SongRequest $songRequest)
+    {
+        $songRequest->update(['name' => '🙈🙈']);
+
+        broadcast(new RequestGotUpdated($songRequest));
+
+        return new SongRequestResource($songRequest);
+    }
+
+    public function delete(SongRequest $songRequest)
+    {
+        $songRequest->delete();
+
+        broadcast(new RequestWasDeleted($songRequest));
+
+        return new SongRequestResource($songRequest);
+    }
+
+    public function markAsPlaying(SongRequest $songRequest)
+    {
+        $songRequest->markAsPlaying();
+
+        broadcast(new RequestGotUpdated($songRequest));
+
+        return new SongRequestResource($songRequest);
+    }
+
+    public function markAsPlayingNext(SongRequest $songRequest)
+    {
+        $songRequest->markAsPlayingNext();
+
+        broadcast(new RequestGotUpdated($songRequest));
 
         return new SongRequestResource($songRequest);
     }

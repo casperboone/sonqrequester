@@ -17,6 +17,9 @@ export default class Request {
         this.allowedToVote = false
 
         axios.post('/requests/' + this.id + '/upvote')
+            .then(response => {
+                this.allowedToVote = response.data.data.allowed_to_vote
+            })
             .catch(() => {
                 this.votes--
                 this.allowedToVote = true

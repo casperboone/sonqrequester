@@ -3,19 +3,26 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Session\Store as SessionStore;
 
 class Visitor
 {
     private $session;
+    private $authorizedUser;
 
-    public function __construct(SessionStore $session)
+    public function __construct(Request $request)
     {
-        $this->session = $session;
+        $this->session = $request->session();
+        $this->authorizedUser = $request->user();
     }
 
     public function hasAlreadyVotedFor(SongRequest $songRequest)
     {
+        if ($this->authorizedUser) {
+            return false;
+        }
+
         return $this->votes()->contains(function ($votedRequest) use ($songRequest) {
             return $songRequest->is($votedRequest);
         });
@@ -32,7 +39,7 @@ class Visitor
     }
 
     public function isAllowedToRequest() {
-        return Carbon::now()->subMinutes(5)->greaterThanOrEqualTo($this->lastRequest());
+        return $this->authorizedUser || Carbon::now()->subMinutes(5)->greaterThanOrEqualTo($this->lastRequest());
     }
 
     public function lastRequest() {

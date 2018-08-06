@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Request::macro('visitor', function () {
-            return new Visitor($this->session());
+            return new Visitor($this);
         });
     }
 }

@@ -7,7 +7,6 @@
             <div class="flex-1">
                 <input type="text" v-model="track" placeholder="Track title" class="block w-full h-10 p-3 bg-grey-lighter"
                        @focus="showSuggestions = true"
-                       @blur="showSuggestions = false"
                        @click="searchTracks()"
                 >
 

@@ -1,13 +1,20 @@
 <template>
     <div>
-        <div v-for="(request, index) in sortedRequests" :class="['flex', 'h-18'].concat(request.owner ? ['bg-yellow-dark'] : ['']).concat(index % 2 == 0 ? [] : ['bg-grey-darker'])">
+        <div v-for="(request, index) in sortedRequests" :class="['flex', 'h-18'].concat(request.playingNow ? ['bg-blue'] : ['']).concat(request.playingNext ? ['bg-green'] : ['']).concat(request.owner ? ['bg-yellow-dark'] : ['']).concat(index % 2 == 0 ? [] : ['bg-grey-darker'])">
             <div class="flex-1 flex p-2">
-                    <img v-if="request.image" :src="request.image" class="mr-2">
-                    <div class="flex-1">
-                        <span class="block font-bold">{{ request.track }}</span>
-                        {{ request.artist }}
+                <img v-if="request.image" :src="request.image" class="mr-2">
+                <div class="flex-1">
+                    <div class="flex flex-col h-full">
+                        <div class="flex-1">
+                            <span class="block font-bold">{{ request.track }}</span>
+                            {{ request.artist }}
+                        </div>
+                        <slot name="description" v-bind:request="request"></slot>
                     </div>
+                </div>
             </div>
+
+            <slot name="actions" v-bind:request="request"></slot>
 
             <div :class="['text-lg', 'font-bold', 'flex', 'items-center', 'text-center', 'leading-none', 'w-10'].concat(index % 2 == 0 ? ['bg-black'] : ['bg-grey-darkest'])">
                 <div v-if="request.allowedToVote" @click="request.upvote()" class="flex-1">
@@ -25,13 +32,13 @@
 <script>
 
     export default {
-        props: ['requests'],
+        props: ['requests', 'retainNowPlaying'],
         computed: {
             sortedRequests() {
                 return this.requests
                     .sort((a, b) => b.votes - a.votes)
-                    .filter(request => !request.playingNow)
-                    .filter(request => !request.playingNext)
+                    .filter(request => this.retainNowPlaying || !request.playingNow)
+                    .filter(request => this.retainNowPlaying ||  !request.playingNext)
             }
         },
     }
