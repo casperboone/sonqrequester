@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="(request, index) in sortedRequests" :class="['flex', 'h-18'].concat(request.playingNow ? ['bg-blue'] : ['']).concat(request.playingNext ? ['bg-green'] : ['']).concat(request.owner ? ['bg-yellow-dark'] : ['']).concat(index % 2 == 0 ? [] : ['bg-grey-darker'])">
+        <div v-for="(request, index) in sortedRequests" :class="['flex', 'h-18'].concat(request.playingNow ? ['bg-green'] : ['']).concat(request.playingNext ? ['bg-blue'] : ['']).concat(request.owner ? ['bg-yellow-dark'] : ['']).concat(index % 2 == 0 ? [] : ['bg-grey-darker'])">
             <div class="flex-1 flex p-2">
                 <img v-if="request.image" :src="request.image" class="mr-2">
                 <div class="flex-1">
