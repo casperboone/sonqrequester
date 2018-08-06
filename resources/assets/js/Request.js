@@ -25,4 +25,20 @@ export default class Request {
                 this.allowedToVote = true
             })
     }
+
+    removeName() {
+        return axios.post('/requests/' + this.id + '/remove-name')
+    }
+
+    archive() {
+        return axios.delete('/requests/' + this.id)
+    }
+
+    markAsNowPlaying() {
+        return axios.post('/requests/' + this.id + '/play-now')
+    }
+
+    markAsNext() {
+        return axios.post('/requests/' + this.id + '/play-next')
+    }
 }

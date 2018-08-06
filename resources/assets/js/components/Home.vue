@@ -46,12 +46,26 @@
                 .listen("SongWasRequested", event => this.requests.push(new Request(event.request)))
                 .listen("RequestGotVote", event =>
                     this.requests.find(request => request.id == event.request.id).votes = event.request.votes
-                );
+                )
+                .listen("RequestGotUpdated", event => this.processUpdatedRequest(new Request(event.request)))
+                .listen("RequestWasArchived", event => this.requests = this.requests.filter(request => request.id != event.request.id))
         },
         methods: {
             updateRequests() {
                 axios.get('/requests')
                     .then(response => this.requests = response.data.data.map(data => new Request(data)))
+            },
+            processUpdatedRequest(updatedRequest) {
+                let allRequestsExceptUpdated = this.requests.filter(request => request.id != updatedRequest.id)
+
+                if (updatedRequest.playingNow) {
+                    allRequestsExceptUpdated.forEach(request => request.playingNow = false)
+                }
+                if (updatedRequest.playingNext) {
+                    allRequestsExceptUpdated.forEach(request => request.playingNext = false)
+                }
+
+                this.requests = allRequestsExceptUpdated.concat(updatedRequest)
             },
             addRequest(request) {
                 this.formActive = false

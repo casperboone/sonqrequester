@@ -36,7 +36,15 @@
         computed: {
             sortedRequests() {
                 return this.requests
-                    .sort((a, b) => b.votes - a.votes)
+                    .sort((a, b) => {
+                        if (b.votes > a.votes) {
+                            return 1
+                        } else if (b.votes < a.votes) {
+                            return -1
+                        } else {
+                            return a.id - b.id
+                        }
+                    })
                     .filter(request => this.retainNowPlaying || !request.playingNow)
                     .filter(request => this.retainNowPlaying ||  !request.playingNext)
             }

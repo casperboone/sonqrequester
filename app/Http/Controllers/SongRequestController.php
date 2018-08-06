@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\RequestGotUpdated;
 use App\Events\RequestGotVote;
-use App\Events\RequestWasDeleted;
+use App\Events\RequestWasArchived;
 use App\Events\SongWasRequested;
 use App\SongRequest;
 use App\Visitor;
@@ -64,9 +64,9 @@ class SongRequestController extends Controller
 
     public function delete(SongRequest $songRequest)
     {
-        $songRequest->delete();
+        broadcast(new RequestWasArchived($songRequest));
 
-        broadcast(new RequestWasDeleted($songRequest));
+        $songRequest->delete();
 
         return new SongRequestResource($songRequest);
     }

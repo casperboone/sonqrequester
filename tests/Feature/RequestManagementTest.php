@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Events\RequestGotUpdated;
 use App\Events\RequestGotVote;
-use App\Events\RequestWasDeleted;
+use App\Events\RequestWasArchived;
 use App\SongRequest;
 use App\User;
 use Carbon\Carbon;
@@ -49,7 +49,7 @@ class RequestSongTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertEquals(0, SongRequest::count());
-        Event::assertDispatched(RequestWasDeleted::class);
+        Event::assertDispatched(RequestWasArchived::class);
     }
 
     /** @test */
