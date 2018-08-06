@@ -12,6 +12,11 @@ class SongRequest extends Model
         'votes' => 0,
     ];
 
+    protected $casts = [
+        'playing_now' => 'bool',
+        'playing_next' => 'bool'
+    ];
+
     public function upvote()
     {
         $this->increment('votes');

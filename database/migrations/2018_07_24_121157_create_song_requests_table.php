@@ -20,6 +20,8 @@ class CreateSongRequestsTable extends Migration
             $table->string('track');
             $table->string('image')->nullable();
             $table->integer('votes')->default(0);
+            $table->boolean('playing_now')->default(false);
+            $table->boolean('playing_next')->default(false);
             $table->timestamps();
         });
     }
