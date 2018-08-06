@@ -8,6 +8,8 @@ export default class Request {
         this.votes = data.votes
         this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote
         this.owner = data.owner == undefined ? false : data.owner
+        this.playingNow = data.playing_now
+        this.playingNext = data.playing_next
     }
 
     upvote() {

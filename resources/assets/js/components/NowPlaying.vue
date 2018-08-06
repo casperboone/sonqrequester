@@ -1,6 +1,6 @@
 <template>
     <div>
-       <div v-if="nowPlayingRequest" class="bg-green-dark w-full text-xl">
+       <div v-if="nowPlayingRequest" class="bg-green-dark w-full text-xl mb-1">
            <span class="uppercase tracking-wide text-sm font-bold block p-2">Now Playing</span>
 
            <div class="flex bg-green p-2">
@@ -17,7 +17,7 @@
            </div>
        </div>
 
-        <div v-if="comingUpRequest" class="bg-blue-dark w-full mt-2">
+        <div v-if="comingUpRequest" class="bg-blue-dark w-full mb-1">
             <span class="uppercase tracking-wide text-sm font-bold block p-2">Coming Up Next</span>
 
             <div class="flex bg-blue p-2">
@@ -41,10 +41,10 @@
         props: ['requests'],
         computed: {
             nowPlayingRequest() {
-                return this.requests.filter(request => request.artist == 'Nirvana').pop()
+                return this.requests.filter(request => request.playingNow).pop()
             },
             comingUpRequest() {
-                return this.requests.filter(request => request.artist == 'blink-182').pop()
+                return this.requests.filter(request => request.playingNext).pop()
             }
         }
     }

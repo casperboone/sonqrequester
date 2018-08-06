@@ -4430,6 +4430,8 @@ var Request = function () {
         this.votes = data.votes;
         this.allowedToVote = data.allowed_to_vote == undefined ? true : data.allowed_to_vote;
         this.owner = data.owner == undefined ? false : data.owner;
+        this.playingNow = data.playing_now;
+        this.playingNext = data.playing_next;
     }
 
     _createClass(Request, [{
@@ -39958,8 +39960,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -40406,8 +40406,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -40416,6 +40414,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         sortedRequests: function sortedRequests() {
             return this.requests.sort(function (a, b) {
                 return b.votes - a.votes;
+            }).filter(function (request) {
+                return !request.playingNow;
+            }).filter(function (request) {
+                return !request.playingNext;
             });
         }
     }
@@ -40460,65 +40462,66 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          request.allowedToVote
-            ? _c(
-                "div",
-                {
-                  class: [
-                    "text-lg",
-                    "font-bold",
-                    "flex",
-                    "items-center",
-                    "text-center",
-                    "leading-none",
-                    "w-10"
-                  ].concat(index % 2 == 0 ? ["bg-black"] : ["bg-grey-darkest"]),
-                  on: {
-                    click: function($event) {
-                      request.upvote()
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "flex-1" }, [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "fill-current text-white",
-                        attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          viewBox: "0 5 20 10"
+          _c(
+            "div",
+            {
+              class: [
+                "text-lg",
+                "font-bold",
+                "flex",
+                "items-center",
+                "text-center",
+                "leading-none",
+                "w-10"
+              ].concat(index % 2 == 0 ? ["bg-black"] : ["bg-grey-darkest"])
+            },
+            [
+              request.allowedToVote
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "flex-1",
+                      on: {
+                        click: function($event) {
+                          request.upvote()
                         }
-                      },
-                      [
-                        _c("path", {
+                      }
+                    },
+                    [
+                      _c(
+                        "svg",
+                        {
+                          staticClass: "fill-current text-white",
                           attrs: {
-                            d:
-                              "M10.707 7.05L10 6.343 4.343 12l1.414 1.414L10 9.172l4.243 4.242L15.657 12z"
+                            xmlns: "http://www.w3.org/2000/svg",
+                            viewBox: "0 5 20 10"
                           }
-                        })
-                      ]
-                    ),
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              d:
+                                "M10.707 7.05L10 6.343 4.343 12l1.414 1.414L10 9.172l4.243 4.242L15.657 12z"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(request.votes) +
+                          "\n            "
+                      )
+                    ]
+                  )
+                : _c("div", { staticClass: "flex-1" }, [
                     _vm._v(
                       "\n                " +
                         _vm._s(request.votes) +
                         "\n            "
                     )
                   ])
-                ]
-              )
-            : _c(
-                "div",
-                {
-                  staticClass:
-                    "text-lg font-bold flex items-center text-center w-10"
-                },
-                [
-                  _c("div", { staticClass: "flex-1" }, [
-                    _vm._v(_vm._s(request.votes))
-                  ])
-                ]
-              )
+            ]
+          )
         ]
       )
     })
@@ -40631,12 +40634,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         nowPlayingRequest: function nowPlayingRequest() {
             return this.requests.filter(function (request) {
-                return request.artist == 'Nirvana';
+                return request.playingNow;
             }).pop();
         },
         comingUpRequest: function comingUpRequest() {
             return this.requests.filter(function (request) {
-                return request.artist == 'blink-182';
+                return request.playingNext;
             }).pop();
         }
     }
@@ -40652,7 +40655,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _vm.nowPlayingRequest
-      ? _c("div", { staticClass: "bg-green-dark w-full text-xl" }, [
+      ? _c("div", { staticClass: "bg-green-dark w-full text-xl mb-1" }, [
           _c(
             "span",
             {
@@ -40701,7 +40704,7 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _vm.comingUpRequest
-      ? _c("div", { staticClass: "bg-blue-dark w-full mt-2" }, [
+      ? _c("div", { staticClass: "bg-blue-dark w-full mb-1" }, [
           _c(
             "span",
             {
@@ -40796,14 +40799,21 @@ var render = function() {
       _vm._v(" "),
       _vm.formActive
         ? _c("request-form", {
-            staticClass: "bg-white mb-2",
+            staticClass: "bg-white mb-1",
             on: { requestSubmitted: _vm.addRequest }
           })
         : _vm._e(),
       _vm._v(" "),
       _c("now-playing", { attrs: { requests: _vm.requests } }),
       _vm._v(" "),
-      _vm._m(1),
+      _c(
+        "div",
+        {
+          staticClass:
+            "w-full bg-pink uppercase tracking-wide text-sm font-bold block p-2"
+        },
+        [_vm._v("Requests and Votes")]
+      ),
       _vm._v(" "),
       _c("requests-list", { attrs: { requests: _vm.requests } })
     ],
@@ -40820,18 +40830,6 @@ var staticRenderFns = [
         staticClass: "h-full",
         attrs: { data: "/images/outsite_logo.svg", type: "image/svg+xml" }
       })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "w-full bg-pink mt-2" }, [
-      _c(
-        "span",
-        { staticClass: "uppercase tracking-wide text-sm font-bold block p-2" },
-        [_vm._v("Requests and Votes")]
-      )
     ])
   }
 ]
