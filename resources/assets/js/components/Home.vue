@@ -10,7 +10,14 @@
 
         <div class="pt-12"></div>
 
-        <request-form v-if="formActive" class="bg-white" @requestSubmitted="addRequest"></request-form>
+        <request-form v-if="formActive" class="bg-white mb-2" @requestSubmitted="addRequest"></request-form>
+
+        <now-playing :requests="requests"></now-playing>
+
+        <div class="w-full bg-pink mt-2">
+            <span class="uppercase tracking-wide text-sm font-bold block p-2">Requests and Votes</span>
+        </div>
+
         <requests-list :requests="requests"></requests-list>
     </div>
 </template>
@@ -18,6 +25,7 @@
 <script>
     import RequestForm from './RequestForm'
     import RequestsList from './RequestsList'
+    import NowPlaying from './NowPlaying'
     import Request from '../Request'
 
     export default {
@@ -29,7 +37,8 @@
         },
         components: {
             'request-form': RequestForm,
-            'requests-list': RequestsList
+            'requests-list': RequestsList,
+            'now-playing': NowPlaying
         },
         mounted() {
             this.updateRequests()

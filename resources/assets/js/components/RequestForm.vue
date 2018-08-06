@@ -1,8 +1,6 @@
 <template>
     <div class="p-2">
-        <div v-if="errorMessage" class="bg-red p-2 mb-3" v-html="'<strong>Oops.</strong> ' + errorMessage">
-
-        </div>
+        <div v-if="errorMessage" class="bg-red p-2 mb-3" v-html="'<strong>Oops.</strong> ' + errorMessage"></div>
 
         <input type="text" v-model="name" placeholder="Your name" class="block w-full p-3 h-10 bg-grey-lighter">
         <div class="flex mt-2">
@@ -54,7 +52,6 @@
 
                 axios.post("/requests", {name: this.name, track: this.track, artist: this.artist, image: this.image})
                     .then(response => {
-                        this.name = ''
                         this.track = ''
                         this.artist = ''
                         this.image = ''
