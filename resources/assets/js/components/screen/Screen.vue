@@ -4,7 +4,7 @@
             <div class="flex-1">
                 <object class="h-full" data="/images/outsite_logo.svg" type="image/svg+xml"></object>
             </div>
-            <div class="p-4 text-white font-bold text-3xl">Song Requester</div>
+            <div class="p-4 text-white text-3xl uppercase tracking-wide">Request your song via <strong>request.outsite.nl</strong></div>
         </div>
         <div class="triangle-large fixed"></div>
 
@@ -73,3 +73,21 @@
         }
     }
 </script>
+
+<style>
+    .triangle-large {
+        width: 0;
+        height: 0;
+        margin: auto;
+
+        border-top: 40px solid;
+        border-color: #e31c79;
+
+        border-left: 40px solid transparent;
+        border-right: 40px solid transparent;
+
+        top: 6rem;
+        left: 0;
+        right: 0;
+    }
+</style>

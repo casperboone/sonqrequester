@@ -25,19 +25,3 @@
     left: 0;
     right: 0;
 }
-
-.triangle-large {
-    width: 0;
-    height: 0;
-    margin: auto;
-
-    border-top: 40px solid;
-    @apply border-pink;
-
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-
-    top: 6rem;
-    left: 0;
-    right: 0;
-}
