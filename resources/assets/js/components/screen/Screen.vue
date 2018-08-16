@@ -6,7 +6,7 @@
             </div>
             <div class="p-4 text-white font-bold text-3xl">Song Requester</div>
         </div>
-        <div class="triangle fixed"></div>
+        <div class="triangle-large fixed"></div>
 
         <div class="pt-24"></div>
 

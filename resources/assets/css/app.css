@@ -15,6 +15,22 @@
     height: 0;
     margin: auto;
 
+    border-top: 20px solid;
+    @apply border-pink;
+
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+
+    top: 3rem;
+    left: 0;
+    right: 0;
+}
+
+.triangle-large {
+    width: 0;
+    height: 0;
+    margin: auto;
+
     border-top: 40px solid;
     @apply border-pink;
 
