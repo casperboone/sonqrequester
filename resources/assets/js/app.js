@@ -20,6 +20,7 @@ Vue.use(Notifications)
 
 
 Vue.component('home', require('./components/Home.vue'));
+Vue.component('screen', require('./components/screen/Screen.vue'));
 Vue.component('admin-home', require('./components/admin/AdminHome.vue'));
 
 const app = new Vue({
