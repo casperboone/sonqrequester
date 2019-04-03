@@ -36,6 +36,7 @@
     export default {
         data() {
             return {
+                trackId: 0,
                 name: '',
                 track: '',
                 artist: '',
@@ -49,8 +50,9 @@
             submit() {
                 this.errorMessage = ""
 
-                axios.post("/requests", {name: this.name, track: this.track, artist: this.artist, image: this.image})
+                axios.post("/requests", {track_id: this.trackId, name: this.name, track: this.track, artist: this.artist, image: this.image})
                     .then(response => {
+                        this.trackId = 0
                         this.track = ''
                         this.artist = ''
                         this.image = ''
@@ -75,6 +77,7 @@
                     .then(response => this.suggestions = response.data)
             },
             selectSuggestion(suggestion) {
+                this.trackId = suggestion.track_id
                 this.track = suggestion.track
                 this.artist = suggestion.artist
                 this.image = suggestion.image

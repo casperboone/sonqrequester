@@ -31,7 +31,9 @@ class SongRequestController extends Controller
             'image' => 'url'
         ]);
 
-        $songRequest = SongRequest::create($request->only('name', 'artist', 'track', 'image'));
+        $trackId = (int) $request->input('track_id', 0);
+
+        $songRequest = SongRequest::create($request->only('name', 'artist', 'track', 'image') + ['track_id' => $trackId]);
         $visitor->registerRequest($songRequest);
 
         broadcast(new SongWasRequested($songRequest))->toOthers();
