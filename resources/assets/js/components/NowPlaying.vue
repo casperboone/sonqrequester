@@ -21,7 +21,7 @@
             <span class="uppercase tracking-wide text-sm font-bold block p-2">Coming Up Next</span>
 
             <div class="flex bg-blue p-2">
-                <img v-if="comingUpRequest.image" :src="comingUpRequest.image" class="mr-2">
+                <img v-if="comingUpRequest.image" :src="comingUpRequest.image" class="h-24 mr-2">
                 <div class="flex flex-col flex-1">
                     <div class="flex-1">
                         <span class="block font-bold">{{ comingUpRequest.track }}</span>
