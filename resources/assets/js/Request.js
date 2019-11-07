@@ -10,6 +10,7 @@ export default class Request {
         this.owner = data.owner == undefined ? false : data.owner
         this.playingNow = data.playing_now
         this.playingNext = data.playing_next
+        this.trackId = data.track_id
     }
 
     upvote() {
