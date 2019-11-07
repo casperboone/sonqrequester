@@ -1,26 +1,31 @@
 <template>
     <div>
-        <div class="w-full bg-pink p-2 flex fixed h-12">
-            <div class="flex-1">
-                <object class="h-full" data="/images/outsite_logo.svg" type="image/svg+xml"></object>
+        <div v-if="privateBrowsing">Please visit this website in non-incognito mode.</div>
+        <div v-else>
+            <div class="w-full bg-pink p-2 flex fixed h-12">
+                <div class="flex-1">
+                    <object class="h-full" data="/images/outsite_logo.svg" type="image/svg+xml"></object>
+                </div>
+                <button :class="['p-2', 'text-pink', 'text-sm'].concat(formActive ? ['bg-pink-lighter'] : ['bg-white'])" @click="formActive = !formActive">Request a Song</button>
             </div>
-            <button :class="['p-2', 'text-pink', 'text-sm'].concat(formActive ? ['bg-pink-lighter'] : ['bg-white'])" @click="formActive = !formActive">Request a Song</button>
+            <div class="triangle fixed"></div>
+
+            <div class="pt-12"></div>
+
+            <request-form v-if="formActive" class="bg-white mb-1" @requestSubmitted="addRequest"></request-form>
+
+            <now-playing :requests="requests"></now-playing>
+
+            <div class="w-full bg-pink uppercase tracking-wide text-sm font-bold block p-2">Requests and Votes</div>
+
+            <requests-list :requests="requests"></requests-list>
         </div>
-        <div class="triangle fixed"></div>
-
-        <div class="pt-12"></div>
-
-        <request-form v-if="formActive" class="bg-white mb-1" @requestSubmitted="addRequest"></request-form>
-
-        <now-playing :requests="requests"></now-playing>
-
-        <div class="w-full bg-pink uppercase tracking-wide text-sm font-bold block p-2">Requests and Votes</div>
-
-        <requests-list :requests="requests"></requests-list>
     </div>
 </template>
 
 <script>
+    import BrowsingModeDetector from 'js-detect-incognito-private-browsing'
+
     import RequestForm from './RequestForm'
     import RequestsList from './RequestsList'
     import NowPlaying from './NowPlaying'
@@ -31,6 +36,7 @@
             return {
                 formActive: false,
                 requests: [],
+                privateBrowsing: false,
             }
         },
         components: {
@@ -39,6 +45,9 @@
             'now-playing': NowPlaying
         },
         mounted() {
+            const BrowsingModeDetector = new window.BrowsingModeDetector()
+            BrowsingModeDetector.do(browsingInIncognitoMode => { this.privateBrowsing = browsingInIncognitoMode })
+
             this.updateRequests()
             window.setInterval(this.updateRequests, 10000)
 
