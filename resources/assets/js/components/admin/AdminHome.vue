@@ -178,7 +178,7 @@
                     const correspondingRequest = this.requests.find(request => request.trackId == karafunNowPlaying.songId)
 
                     const currentlyPlayingAccordingToSongRequester = this.requests.find(request => request.playingNow)
-                    if (correspondingRequest !== currentlyPlayingAccordingToSongRequester) {
+                    if (currentlyPlayingAccordingToSongRequester && correspondingRequest !== currentlyPlayingAccordingToSongRequester) {
                         this.archiveRequest(currentlyPlayingAccordingToSongRequester)
                     }
 
